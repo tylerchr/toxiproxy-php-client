@@ -2,7 +2,8 @@
 
 use Ihsw\Toxiproxy\Test\AbstractTest,
     Ihsw\Toxiproxy\Toxiproxy,
-    Ihsw\Toxiproxy\Proxy;
+    Ihsw\Toxiproxy\Proxy,
+    Ihsw\Toxiproxy\Toxic;
 
 class ProxyTest extends AbstractTest
 {
@@ -83,6 +84,32 @@ class ProxyTest extends AbstractTest
         $this->handleProxy(function(Proxy $proxy) {
             $this->markTestIncomplete("NYI");
             unset($proxy["test"]);
+        });
+    }
+
+    public function testGetDownstreamToxics()
+    {
+        $this->handleProxy(function(Proxy $proxy) {
+            $toxics = $proxy->getToxics(Proxy::DOWNSTREAM);
+            foreach ($toxics as $toxic) {
+                $this->assertTrue(
+                    $toxic instanceof Toxic,
+                    "Get toxics toxic was not an instance of Toxic"
+                );
+            }
+        });
+    }
+
+    public function testGetUpstreamToxics()
+    {
+        $this->handleProxy(function(Proxy $proxy) {
+            $toxics = $proxy->getToxics(Proxy::UPSTREAM);
+            foreach ($toxics as $toxic) {
+                $this->assertTrue(
+                    $toxic instanceof Toxic,
+                    "Get toxics toxic was not an instance of Toxic"
+                );
+            }
         });
     }
 }

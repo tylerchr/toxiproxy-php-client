@@ -3,6 +3,7 @@
 use GuzzleHttp\Message\Response as HttpResponse,
     GuzzleHttp\Exception\ClientException as HttpClientException;
 use Ihsw\Toxiproxy\Toxiproxy,
+    Ihsw\Toxiproxy\Toxic,
     Ihsw\Toxiproxy\Exception\InvalidToxicException;
 
 class Proxy implements \ArrayAccess
@@ -92,6 +93,10 @@ class Proxy implements \ArrayAccess
     }
     public function getDownstreamToxics() { return $this->downstreamToxics; }
 
+    public function getToxiproxy()
+    {
+        return $this->toxiproxy;
+    }
 
     /**
      * ArrayAccess
@@ -135,6 +140,23 @@ class Proxy implements \ArrayAccess
         } catch (HttpClientException $e) {
             $this->toxiproxy->handleHttpClientException($e);
         }
+    }
+
+    public function getToxics($direction)
+    {
+        try {
+            $url = sprintf("/proxies/%s/%s/toxics", $this->name, $direction);
+            $results = json_decode(
+                $this->getHttpClient()->get($url)->getBody(),
+                true
+            );
+        } catch (HttpClientException $e) {
+            return $this->toxiproxy->handleHttpClientException($e);
+        }
+
+        return array_map(function($name, $result) use($direction) {
+            return new Toxic($this, $name, $direction, $result);
+        }, array_keys($results), array_values($results));
     }
 
     private function setProxy($data)
