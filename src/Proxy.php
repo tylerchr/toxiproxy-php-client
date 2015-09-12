@@ -163,12 +163,23 @@ class Proxy
         }, array_keys($results), array_values($results));
     }
 
-    private function setProxy($data)
+    private function set($data)
     {
         try {
             return $this->getHttpClient()->post(
                 sprintf("/proxies/%s", $this->name),
                 ["body" => json_encode($data)]
+            );
+        } catch (HttpClientException $e) {
+            $this->toxiproxy->handleHttpClientException($e);
+        }
+    }
+
+    public function delete()
+    {
+        try {
+            return $this->getHttpClient()->delete(
+                sprintf("/proxies/%s", $this->name)
             );
         } catch (HttpClientException $e) {
             $this->toxiproxy->handleHttpClientException($e);
@@ -214,11 +225,11 @@ class Proxy
 
     public function disable()
     {
-        return $this->setProxy(["enabled" => false]);
+        return $this->set(["enabled" => false]);
     }
 
     public function enable()
     {
-        return $this->setProxy(["enabled" => true]);
+        return $this->set(["enabled" => true]);
     }
 }

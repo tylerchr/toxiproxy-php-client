@@ -59,4 +59,27 @@ class ProxyTest extends AbstractHttpTest
             );
         });
     }
+
+    public function testGetDownstreamToxics()
+    {
+        $this->markTestIncomplete("NYI");
+    }
+
+    public function testGetUpstreamToxics()
+    {
+        $this->markTestIncomplete("NYI");
+    }
+
+    public function testDelete()
+    {
+        $responses = [self::httpResponseFactory(Toxiproxy::NO_CONTENT, "")];
+        $this->handleProxy($responses, function(Proxy $proxy) {
+            $response = $proxy->delete();
+            $this->assertEquals(
+                $response->getStatusCode(),
+                Toxiproxy::NO_CONTENT,
+                sprintf("Could not delete proxy '%s': %s", $proxy->getName(), $response->getBody())
+            );
+        });
+    }
 }

@@ -103,22 +103,6 @@ class ToxiproxyTest extends AbstractTest
         );
     }
 
-    public function testDelete()
-    {
-        $this->testCreate(function(Toxiproxy $toxiproxy, Proxy $proxy) {
-            $response = $toxiproxy->delete($proxy);
-            $this->assertEquals(
-                $response->getStatusCode(),
-                Toxiproxy::NO_CONTENT,
-                sprintf(
-                    "Could not delete proxy '%s': %s",
-                    $proxy->getName(),
-                    $response->getBody()
-                )
-            );
-        });
-    }
-
     public function testReset()
     {
         $this->testCreate(function(Toxiproxy $toxiproxy, Proxy $proxy) {

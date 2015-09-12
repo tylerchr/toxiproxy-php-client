@@ -121,17 +121,6 @@ class Toxiproxy
         }
     }
 
-    public function delete(Proxy $proxy)
-    {
-        try {
-            return $this->httpClient->delete(
-                sprintf("/proxies/%s", $proxy->getName())
-            );
-        } catch (HttpClientException $e) {
-            $this->handleHttpClientException($e);
-        }
-    }
-
     public function exists($name)
     {
         return !is_null($this->get($name));

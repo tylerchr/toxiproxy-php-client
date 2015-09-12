@@ -98,19 +98,6 @@ class ToxiproxyTest extends AbstractHttpTest
         $this->assertNull($proxy, "Non-existent proxy was expected to be null, was not null");
     }
 
-    public function testDelete()
-    {
-        $responses = [self::httpResponseFactory(Toxiproxy::NO_CONTENT, "")];
-        $this->testCreate($responses, function(Toxiproxy $toxiproxy, Proxy $proxy) {
-            $response = $toxiproxy->delete($proxy);
-            $this->assertEquals(
-                $response->getStatusCode(),
-                Toxiproxy::NO_CONTENT,
-                sprintf("Could not delete proxy '%s': %s", $proxy->getName(), $response->getBody())
-            );
-        });
-    }
-
     public function testReset()
     {
         $responses = [

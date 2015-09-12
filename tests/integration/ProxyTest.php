@@ -94,4 +94,20 @@ class ProxyTest extends AbstractTest
             }
         });
     }
+
+    public function testDelete()
+    {
+        $this->handleProxy(function(Proxy $proxy) {
+            $response = $proxy->delete($proxy);
+            $this->assertEquals(
+                $response->getStatusCode(),
+                Toxiproxy::NO_CONTENT,
+                sprintf(
+                    "Could not delete proxy '%s': %s",
+                    $proxy->getName(),
+                    $response->getBody()
+                )
+            );
+        });
+    }
 }
