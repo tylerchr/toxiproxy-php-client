@@ -15,8 +15,15 @@ class ToxiproxyTest extends AbstractTest
     {
         $toxiproxy = new Toxiproxy(self::httpClientFactory());
 
-        $proxy = $toxiproxy->create(self::TEST_NAME, self::TEST_UPSTREAM, self::TEST_LISTEN);
-        $this->assertTrue($proxy instanceof Proxy, "Create proxy was not an instance of Proxy");
+        $proxy = $toxiproxy->create(
+            self::TEST_NAME,
+            self::TEST_UPSTREAM,
+            self::TEST_LISTEN
+        );
+        $this->assertTrue(
+            $proxy instanceof Proxy,
+            "Create proxy was not an instance of Proxy"
+        );
 
         if (!is_null($callback)) {
             $callback($toxiproxy, $proxy);
@@ -26,13 +33,20 @@ class ToxiproxyTest extends AbstractTest
     public function testAll()
     {
         $this->testCreate(function(Toxiproxy $toxiproxy) {
-            $result = array_reduce($toxiproxy->all(), function($result, $proxy) {
-                if (!$proxy) {
-                    return $proxy;
-                }
-                return $proxy instanceof Proxy;
-            }, true);
-            $this->assertTrue($result, "All results were not instances of Proxy");
+            $result = array_reduce(
+                $toxiproxy->all(),
+                function($result, $proxy) {
+                    if (!$proxy) {
+                        return $proxy;
+                    }
+                    return $proxy instanceof Proxy;
+                },
+                true
+            );
+            $this->assertTrue(
+                $result,
+                "All results were not instances of Proxy"
+            );
         });
     }
 
@@ -42,7 +56,11 @@ class ToxiproxyTest extends AbstractTest
     public function testCreateDuplicate()
     {
         $this->testCreate(function(Toxiproxy $toxiproxy, Proxy $proxy) {
-            $toxiproxy->create($proxy->getName(), $proxy->getUpstream(), $proxy->getListen());
+            $toxiproxy->create(
+                $proxy->getName(),
+                $proxy->getUpstream(),
+                $proxy->getListen()
+            );
         });
     }
 
@@ -50,7 +68,10 @@ class ToxiproxyTest extends AbstractTest
     {
         $this->testCreate(function(Toxiproxy $toxiproxy, Proxy $proxy) {
             $proxy = $toxiproxy->get($proxy->getName());
-            $this->assertTrue($proxy instanceof Proxy, "Create proxy was not an instance of Proxy");
+            $this->assertTrue(
+                $proxy instanceof Proxy,
+                "Create proxy was not an instance of Proxy"
+            );
         });
     }
 
@@ -73,7 +94,13 @@ class ToxiproxyTest extends AbstractTest
     {
         $toxiproxy = new Toxiproxy(self::httpClientFactory());
         $proxy = $toxiproxy->get(self::NONEXISTENT_TEST_NAME);
-        $this->assertNull($proxy, sprintf("Non-existent proxy was not null", self::NONEXISTENT_TEST_NAME));
+        $this->assertNull(
+            $proxy,
+            sprintf(
+                "Non-existent proxy was not null",
+                self::NONEXISTENT_TEST_NAME
+            )
+        );
     }
 
     public function testDelete()
@@ -83,7 +110,11 @@ class ToxiproxyTest extends AbstractTest
             $this->assertEquals(
                 $response->getStatusCode(),
                 Toxiproxy::NO_CONTENT,
-                sprintf("Could not delete proxy '%s': %s", $proxy->getName(), $response->getBody())
+                sprintf(
+                    "Could not delete proxy '%s': %s",
+                    $proxy->getName(),
+                    $response->getBody()
+                )
             );
         });
     }
@@ -91,11 +122,17 @@ class ToxiproxyTest extends AbstractTest
     public function testReset()
     {
         $this->testCreate(function(Toxiproxy $toxiproxy, Proxy $proxy) {
-            $response = $proxy->updateDownstream("latency", ["enabled" => true, "latency" => 1000]);
+            $response = $proxy->updateDownstream(
+                "latency",
+                ["enabled" => true, "latency" => 1000]
+            );
             $this->assertEquals(
                 $response->getStatusCode(),
                 Toxiproxy::OK,
-                sprintf("Could not update downstream latency toxic for proxy '%s'", $proxy->getName())
+                sprintf(
+                    "Could not update downstream latency toxic for proxy '%s'",
+                    $proxy->getName()
+                )
             );
 
             $proxy->disable();
