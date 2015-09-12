@@ -8,7 +8,7 @@ use Ihsw\Toxiproxy\Exception\ProxyExistsException,
     Ihsw\Toxiproxy\Exception\InvalidToxicException,
     Ihsw\Toxiproxy\Proxy;
 
-class Toxiproxy implements \ArrayAccess
+class Toxiproxy
 {
     const OK = 200;
     const CREATED = 201;
@@ -77,30 +77,6 @@ class Toxiproxy implements \ArrayAccess
         }
 
         return $proxy;
-    }
-
-    /**
-     * ArrayAccess
-     */
-    public function offsetExists($offset)
-    {
-        return $this->exists($offset);
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        array_unshift($value, $offset);
-        call_user_func_array([$this, "create"], $value);
-    }
-
-    public function offsetUnset($offset)
-    {
-        $this->delete($offset);
-    }
-
-    public function offsetGet($offset)
-    {
-        return $this->get($offset);
     }
 
     /**

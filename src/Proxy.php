@@ -6,7 +6,7 @@ use Ihsw\Toxiproxy\Toxiproxy,
     Ihsw\Toxiproxy\Toxic,
     Ihsw\Toxiproxy\Exception\InvalidToxicException;
 
-class Proxy implements \ArrayAccess
+class Proxy
 {
     const UPSTREAM = "upstream";
     const DOWNSTREAM = "downstream";
@@ -42,28 +42,45 @@ class Proxy implements \ArrayAccess
         $this->enabled = $enabled;
         return $this;
     }
-    public function getEnabled() { return $this->enabled; }
+
+    public function getEnabled()
+    {
+        return $this->enabled;
+    }
 
     public function setName($name)
     {
         $this->name = $name;
         return $this;
     }
-    public function getName() { return $this->name; }
+
+    public function getName()
+    {
+        return $this->name;
+    }
 
     public function setUpstream($upstream)
     {
         $this->upstream = $upstream;
         return $this;
     }
-    public function getUpstream() { return $this->upstream; }
+
+    public function getUpstream()
+    {
+        return $this->upstream;
+    }
 
     public function setListen($listen)
     {
         $this->listen = $listen;
         return $this;
     }
-    public function getListen() { return $this->listen; }
+
+    public function getListen()
+    {
+        return $this->listen;
+    }
+
     public function getListenIp()
     {
         $ip = implode(":", explode(":", $this->listen, -1));
@@ -72,6 +89,7 @@ class Proxy implements \ArrayAccess
         }
         return $ip;
     }
+
     public function getListenPort()
     {
         $ip = $this->getListenIp();
@@ -84,43 +102,26 @@ class Proxy implements \ArrayAccess
         $this->upstreamToxics = $toxics;
         return $this;
     }
-    public function getUpstreamToxics() { return $this->upstreamToxics; }
+
+    public function getUpstreamToxics()
+    {
+        return $this->upstreamToxics;
+    }
 
     public function setDownstreamToxics(array $toxics)
     {
         $this->downstreamToxics = $toxics;
         return $this;
     }
-    public function getDownstreamToxics() { return $this->downstreamToxics; }
+
+    public function getDownstreamToxics()
+    {
+        return $this->downstreamToxics;
+    }
 
     public function getToxiproxy()
     {
         return $this->toxiproxy;
-    }
-
-    /**
-     * ArrayAccess
-     */
-    public function offsetExists($offset)
-    {
-        throw new \Exception("NYI");
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        throw new \Exception("NYI");
-    }
-
-    public function offsetUnset($offset)
-    {
-        throw new \Exception("NYI");
-        unset($this->content[$offset]);
-    }
-
-    public function offsetGet($offset)
-    {
-        throw new \Exception("NYI");
-        return $this->content[$offset];
     }
 
     /**

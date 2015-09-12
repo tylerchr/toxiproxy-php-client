@@ -45,19 +45,6 @@ class ToxiproxyTest extends AbstractHttpTest
         });
     }
 
-    public function testCreateArrayAccess()
-    {
-        $responses = [
-            self::createProxyResponse(self::TEST_NAME, self::TEST_UPSTREAM, self::TEST_LISTEN),
-            self::getProxyResponse(self::TEST_NAME, self::TEST_LISTEN, self::TEST_UPSTREAM)
-        ];
-        $toxiproxy = new Toxiproxy(self::mockHttpClientFactory($responses));
-
-        $toxiproxy[self::TEST_NAME] = [self::TEST_UPSTREAM, self::TEST_LISTEN];
-        $proxy = $toxiproxy[self::TEST_NAME];
-        $this->assertTrue($proxy instanceof Proxy, "Create proxy was not an instance of Proxy");
-    }
-
     /**
      * @expectedException Ihsw\Toxiproxy\Exception\ProxyExistsException
      */
@@ -102,30 +89,12 @@ class ToxiproxyTest extends AbstractHttpTest
         $this->assertFalse($exists, "Exists was not false");
     }
 
-    public function testGetArrayAccess()
-    {
-        $responses = [self::getProxyResponse(self::TEST_NAME, self::TEST_LISTEN, self::TEST_UPSTREAM)];
-        $this->testCreate($responses, function(Toxiproxy $toxiproxy, Proxy $proxy) {
-            $proxy = $toxiproxy[$proxy->getName()];
-            $this->assertTrue($proxy instanceof Proxy, "Create proxy was not an instance of Proxy");
-        });
-    }
-
     public function testGetNonexist()
     {
         $toxiproxy = new Toxiproxy(self::mockHttpClientFactory(
             [self::getNonexistentProxyResponse(self::NONEXISTENT_TEST_NAME)]
         ));
         $proxy = $toxiproxy->get(self::NONEXISTENT_TEST_NAME);
-        $this->assertNull($proxy, "Non-existent proxy was expected to be null, was not null");
-    }
-
-    public function testGetNonexistArrayAccess()
-    {
-        $toxiproxy = new Toxiproxy(self::mockHttpClientFactory(
-            [self::getNonexistentProxyResponse(self::NONEXISTENT_TEST_NAME)]
-        ));
-        $proxy = $toxiproxy[self::NONEXISTENT_TEST_NAME];
         $this->assertNull($proxy, "Non-existent proxy was expected to be null, was not null");
     }
 
@@ -138,18 +107,6 @@ class ToxiproxyTest extends AbstractHttpTest
                 $response->getStatusCode(),
                 Toxiproxy::NO_CONTENT,
                 sprintf("Could not delete proxy '%s': %s", $proxy->getName(), $response->getBody())
-            );
-        });
-    }
-
-    public function testDeleteArrayAccess()
-    {
-        $responses = [self::httpResponseFactory(Toxiproxy::NO_CONTENT, "")];
-        $this->testCreate($responses, function(Toxiproxy $toxiproxy, Proxy $proxy) {
-            unset($toxiproxy[$proxy]);
-            $this->assertFalse(
-                array_key_exists($proxy->getName(), $toxiproxy),
-                sprintf("Could not delete proxy '%s'", $proxy->getName())
             );
         });
     }

@@ -25,7 +25,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     public function tearDown()
     {
         $toxiproxy = new Toxiproxy(self::httpClientFactory());
-        $proxy = $toxiproxy[self::TEST_NAME];
+        $proxy = $toxiproxy->get(self::TEST_NAME);
         if (!is_null($proxy)) {
             $toxiproxy->delete($proxy);
         }

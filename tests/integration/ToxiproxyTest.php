@@ -36,15 +36,6 @@ class ToxiproxyTest extends AbstractTest
         });
     }
 
-    public function testCreateArrayAccess()
-    {
-        $toxiproxy = new Toxiproxy(self::httpClientFactory());
-
-        $toxiproxy[self::TEST_NAME] = [self::TEST_UPSTREAM, self::TEST_LISTEN];
-        $proxy = $toxiproxy[self::TEST_NAME];
-        $this->assertTrue($proxy instanceof Proxy, "Create proxy was not an instance of Proxy");
-    }
-
     /**
      * @expectedException Ihsw\Toxiproxy\Exception\ProxyExistsException
      */
@@ -78,25 +69,10 @@ class ToxiproxyTest extends AbstractTest
         $this->assertFalse($exists, "Exists was not false");
     }
 
-    public function testGetArrayAccess()
-    {
-        $this->testCreate(function(Toxiproxy $toxiproxy, Proxy $proxy) {
-            $proxy = $toxiproxy[$proxy->getName()];
-            $this->assertTrue($proxy instanceof Proxy, "Create proxy was not an instance of Proxy");
-        });
-    }
-
     public function testGetNonexist()
     {
         $toxiproxy = new Toxiproxy(self::httpClientFactory());
         $proxy = $toxiproxy->get(self::NONEXISTENT_TEST_NAME);
-        $this->assertNull($proxy, sprintf("Non-existent proxy was not null", self::NONEXISTENT_TEST_NAME));
-    }
-
-    public function testGetNonexistArrayAccess()
-    {
-        $toxiproxy = new Toxiproxy(self::httpClientFactory());
-        $proxy = $toxiproxy[self::NONEXISTENT_TEST_NAME];
         $this->assertNull($proxy, sprintf("Non-existent proxy was not null", self::NONEXISTENT_TEST_NAME));
     }
 
@@ -108,17 +84,6 @@ class ToxiproxyTest extends AbstractTest
                 $response->getStatusCode(),
                 Toxiproxy::NO_CONTENT,
                 sprintf("Could not delete proxy '%s': %s", $proxy->getName(), $response->getBody())
-            );
-        });
-    }
-
-    public function testDeleteArrayAccess()
-    {
-        $this->testCreate(function(Toxiproxy $toxiproxy, Proxy $proxy) {
-            unset($toxiproxy[$proxy]);
-            $this->assertFalse(
-                array_key_exists($proxy->getName(), $toxiproxy),
-                sprintf("Could not delete proxy '%s'", $proxy->getName())
             );
         });
     }

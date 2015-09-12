@@ -69,38 +69,6 @@ class ProxyTest extends AbstractTest
         });
     }
 
-    public function testCreateArrayAccess()
-    {
-        $this->handleProxy(function(Proxy $proxy) {
-            $this->markTestIncomplete("NYI");
-            $proxy["test"] = "test";
-        });
-    }
-
-    public function testGetArrayAccess()
-    {
-        $this->handleProxy(function(Proxy $proxy) {
-            $this->markTestIncomplete("NYI");
-            $test = $proxy["test"];
-        });
-    }
-
-    public function testGetNonexistArrayAccess()
-    {
-        $this->handleProxy(function(Proxy $proxy) {
-            $this->markTestIncomplete("NYI");
-            unset($proxy["test-non-exist"]);
-        });
-    }
-
-    public function testDeleteArrayAccess()
-    {
-        $this->handleProxy(function(Proxy $proxy) {
-            $this->markTestIncomplete("NYI");
-            unset($proxy["test"]);
-        });
-    }
-
     public function testGetDownstreamToxics()
     {
         $this->handleProxy(function(Proxy $proxy) {
